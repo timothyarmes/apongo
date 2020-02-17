@@ -34,7 +34,13 @@ then sort or filter on any field.
    for the other tables used in the request (using `$lookup`).
 
 You can then include the pipeline as part of a larger aggregation pipeline that sorts and filters the result.
-	
+
+## Installation
+
+```
+npm install apongo
+```
+
 ## Specifying the Joins
 
 The function `createPipeline` recursively analyses the requested fields and handles the creation of the
