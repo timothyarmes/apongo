@@ -1,0 +1,48 @@
+{
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "extends": [
+    "airbnb",
+  ],
+  "parserOptions": {
+    "ecmaVersion": 11
+  },
+  "rules": {
+    /* Bug #530 */
+    "template-curly-spacing" : "off",
+    "indent": "off",
+    /* end of bug*/
+    "object-curly-newline": ["error", {
+      "ObjectExpression": { "consistent": true },
+      "ObjectPattern": { "multiline": true }
+    }],
+    "no-unused-vars": ["error", { "vars": "all", "args": "after-used", "ignoreRestSiblings": true, "varsIgnorePattern": "^_" }],
+    "no-nested-ternary": 0,
+    "max-len": 0,
+    "no-bitwise": 0,
+    "max-classes-per-file": 0,
+    "no-param-reassign": 0,
+    "import/prefer-default-export": 0,
+    "import/no-absolute-path": 0,
+    "import/no-unresolved": 0,
+    "import/no-extraneous-dependencies": 0,
+    "import/no-cycle": 0,
+    "import/extensions": [
+      "off",
+      "never"
+    ],
+    "no-console": "off",
+    "no-confusing-arrow": "off",
+    "no-restricted-syntax": "off",
+    "no-underscore-dangle": [
+      "error",
+      {
+        "allow": [
+          "_id",
+        ]
+      }
+    ]
+  }
+}
