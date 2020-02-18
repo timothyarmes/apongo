@@ -98,12 +98,12 @@ function fieldTreeFromAST(inASTs, resolveInfo, initTree = {}, options = {}, pare
           const fieldGqlType = fieldGqlTypeOrUndefined;
           const args = getArgumentValues(field, val, variableValues) || {};
           if (parentType.name && !tree[parentType.name][alias]) {
-            const joiner = { ...(field.joiner || {}) };
+            const apongo = { ...(field.apongo || {}) };
             const newTreeRoot = {
               name,
               alias,
               args,
-              joiner,
+              apongo,
               fieldsByTypeName: isCompositeType(fieldGqlType) ? { [fieldGqlType.name]: {} } : {},
             };
 
