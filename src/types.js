@@ -7,10 +7,10 @@ const apongoTypes = gql`
     localField: String!
     foreignField: String!
     preserveNull: Boolean
-    conds: JSON
+    conds: String
   }
 
-  directive @apongo(lookup: ApongoLookup, compose: [String!], expr: JSON) on FIELD_DEFINITION
+  directive @apongo(lookup: ApongoLookup, compose: [String!], expr: String) on FIELD_DEFINITION
 `;
 
 class apongoDirective extends SchemaDirectiveVisitor {
