@@ -46,14 +46,14 @@ when calling Apollo's `makeExecutableSchema`:
 
 ```
 import { mergeTypes } from 'merge-graphql-schemas';
-import { apongoDirective, apongoTypes } from 'apongo';
+import { apongoDirectives, apongoTypes } from 'apongo';
 
 ...
 
 const schema = makeExecutableSchema({
   typeDefs: mergeTypes([apongoTypes, ...yourTypes]),
   resolvers,
-  schemaDirectives: { apongo: apongoDirective },
+  schemaDirectives: { ...apongoDirectives },
 });
 ```
 

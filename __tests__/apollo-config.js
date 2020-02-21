@@ -4,7 +4,7 @@ import { ApolloServer } from 'apollo-server';
 import gql from 'graphql-tag';
 import mongoose from 'mongoose';
 
-import { apongoTypes, apongoDirective } from '../src/types';
+import { apongoTypes, apongoDirectives } from '../src/types';
 import createPipeline from '../src/create-pipeline';
 
 const userSchema = new mongoose.Schema({
@@ -73,7 +73,7 @@ export const apolloServer = () => {
   const server = new ApolloServer({
     resolvers,
     typeDefs: mergeTypes([apongoTypes, types]),
-    schemaDirectives: { apongo: apongoDirective }
+    schemaDirectives: { ...apongoDirectives }
   });
 
   const { query } = createTestClient(server);

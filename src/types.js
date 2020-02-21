@@ -24,6 +24,6 @@ class apongoDirective extends SchemaDirectiveVisitor {
 
 module.exports = {
   apongoTypes,
-  apongoDirective,
+  apongoDirectives : { apongo: apongoDirective },
 };
 

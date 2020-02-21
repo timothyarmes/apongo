@@ -1,8 +1,8 @@
 const createPipeline = require('./src/create-pipeline');
-const { apongoTypes, apongoDirective } = require('./src/types');
+const { apongoTypes, apongoDirectives } = require('./src/types');
 
 module.exports = {
   createPipeline,
   apongoTypes,
-  apongoDirective,
+  apongoDirectives,
 };
