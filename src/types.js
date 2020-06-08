@@ -8,6 +8,8 @@ const apongoTypes = gql`
     foreignField: String!
     preserveNull: Boolean
     conds: String
+    sort: String
+    limit: Int
   }
 
   directive @apongo(lookup: ApongoLookup, compose: [String!], expr: String) on FIELD_DEFINITION

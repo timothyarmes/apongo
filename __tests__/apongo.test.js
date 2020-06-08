@@ -26,10 +26,8 @@ const PAGINATED_TASKS = gql`
       tasks {
         _id
         task
-        user {
-          _id
-          name
-        }
+        user { _id name }
+        latestSubTask { _id }
       }
     }
   }
@@ -61,14 +59,24 @@ afterAll(() => {
 
 describe('lookup', () => {
   it('joins top level requests', async () => {
-    const { data: { tasks } } = await query({ query: TASKS });
-    const t1 =  tasks.find(({ _id }) => _id === 't1');
+    const { data: { tasks } } = await query({ query: TASKS });
+    const t1 =  tasks.find(({ _id }) => _id === 't1');
     expect(t1.user._id).toEqual("u1")
   })
 
   it('joins field level requests', async () => {
-    const { data: { paginatedTasks } } = await query({ query: PAGINATED_TASKS });
+    const { data, errors } = await query({ query: PAGINATED_TASKS });
+    if (errors) console.log(errors);
+    const { paginatedTasks } = data;
     const t1 = paginatedTasks.tasks.find(({ _id }) => _id === 't1');
     expect(t1.user._id).toEqual("u1")
+  })
+
+  it('handles advanced lookups', async () => {
+    const { data, errors } = await query({ query: PAGINATED_TASKS });
+    if (errors) console.log(errors);
+    const { paginatedTasks } = data;
+    const t1 = paginatedTasks.tasks.find(({ _id }) => _id === 't1');
+    expect(t1.latestSubTask._id).toEqual("st2")
   })
 });

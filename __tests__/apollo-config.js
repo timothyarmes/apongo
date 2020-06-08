@@ -18,6 +18,9 @@ const taskSchema = new mongoose.Schema({
 
 export const User = mongoose.model('user', userSchema);
 export const Task = mongoose.model('task', taskSchema);
+export const SubTask = mongoose.model('subtask', taskSchema);
+
+const sortSubTasks = JSON.stringify({ order: -1 }).replace(/"/g, '\\"');
 
 const types = gql`
   type User {
@@ -29,6 +32,12 @@ const types = gql`
     _id: String
     task: String
     user: User @apongo(lookup: { collection: "users", localField: "userId", foreignField: "_id" })
+    latestSubTask: SubTask @apongo(lookup: { collection: "subtasks", localField: "_id", foreignField: "taskId", sort: "${sortSubTasks}", limit: 1 })
+  }
+
+  type SubTask {
+    _id: String
+    order: String
   }
 
   type PaginatedTasks {
@@ -54,13 +63,15 @@ const resolvers = {
         ...createPipeline('tasks', resolveInfo, context),
         {
           $facet: {
-            tasks: [{ $limit: 1 }],
+            tasks: [{ $limit: 10 }],
             count: [
               { $group: { _id: null, count: { $sum: 1 } } },
             ],
           },
         },
       ];
+
+      // console.log(JSON.stringify(pipeline, null, 2))
 
       return Task.aggregate(pipeline).exec().then(([{tasks, count}]) => {
         return { tasks, count: count.length === 0 ? 0 : count[0].count };

@@ -178,6 +178,9 @@ The `lookup` request accepts a number of fields:
 | _foreignField_              | The name of foreign field used by the $lookup
 | _preserveIfNull_ (Optional) | Boolean to determine if the parent should should be kept if no join is found (default - `true`)
 | _conds_ (Optional)          | A *stringified* JSON array of additional conditions used by the lookup
+| _sort_ (Optional)           | A *stringified* JSON object of sort conditions used by the lookup
+| _limit_ (Optional)          | Limit the results returned by the lookup (in the even that there is more than one)
+
 
 Sometimes your lookup will need extra conditions to perform the join between the two collections. Mongo's `$lookup`
 command has an advanced feature that allows us to use a sub-pipeline within the primary lookup. Apongo uses this feature to
@@ -205,6 +208,17 @@ const types = gql`
      limitedCompany: Company @apongo(lookup: { collection: "companies", localField: "companyId", foreignField: "_id", conds: "${isLimitedConds}" })
    }
 `;
+```
+
+Similarly, `sort` should be a stringified object.  Using sort and limit we can simulate a `findOne` when joining one item from another collection.
+
+```
+const sortSubTasks = JSON.stringify({ order: -1 }).replace(/"/g, '\\"');
+
+type Task {
+  _id: String
+  latestSubTask: SubTask @apongo(lookup: { collection: "subtasks", localField: "_id", foreignField: "taskId", sort: "${sortSubTasks}", limit: 1 })
+}
 ```
 
 ### The *compose* request

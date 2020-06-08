@@ -6,34 +6,42 @@ function fillPipeline(fields, pipeline, context, path = '') {
   Object.keys(fields).forEach((fieldName) => {
     const field = fields[fieldName];
     const { alias, apongo = {} } = field;
-  
+
     // `lookup` performs a lookup stage
     if (apongo.lookup) {
       let lookup;
-      if (!apongo.lookup.conds) {
+      const { collection, localField, foreignField, preserveNull, conds, sort, limit } = apongo.lookup;
+      const simple = !conds && !sort && !limit;
+
+      if (simple) {
         lookup = {
-          from: apongo.lookup.collection,
-          localField: `${path}${apongo.lookup.localField}`,
-          foreignField: apongo.lookup.foreignField,
+          from: collection,
+          localField: `${path}${localField}`,
+          foreignField: foreignField,
         };
       } else {
         lookup = {
-          from: apongo.lookup.collection,
-          let: { localField: `$${path}${apongo.lookup.localField}` },
-          pipeline: [{
-            $match: {
-              $expr: {
-                $and: [
-                  { $eq: [`$${apongo.lookup.foreignField}`, '$$localField'] },
-                  ...JSON.parse(apongo.lookup.conds),
-                ],
+          from: collection,
+          let: { localField: `$${path}${localField}` },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: [`$${foreignField}`, '$$localField'] },
+                    ...(conds ? JSON.parse(conds) : []),
+                  ],
+                },
               },
             },
-          }],
+          
+            ...(sort ? [{ $sort: JSON.parse(sort) }] : [] ),
+            ...(limit ? [{ $limit: limit }] : [] ),
+          ],
         };
       }
 
-      const preserveNullAndEmptyArrays = apongo.lookup.preserveNull !== undefined ? apongo.lookup.preserveNull : true;
+      const preserveNullAndEmptyArrays = preserveNull !== undefined ? preserveNull : true;
 
       pipeline.push({ $lookup: { ...lookup, as: `${path}${alias}` } });
       pipeline.push({ $unwind: { path: `$${path}${alias}`, preserveNullAndEmptyArrays } });
