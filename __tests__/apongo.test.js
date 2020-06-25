@@ -4,7 +4,6 @@ import mongoUnit from 'mongo-unit';
 
 import { apolloServer, User, Task } from './apollo-config';
 import testData from './test-data';
-import { chainResolvers } from 'graphql-tools';
 
 const TASKS = gql`
   query {
@@ -36,15 +35,8 @@ const PAGINATED_TASKS = gql`
 const query = apolloServer();
 
 beforeAll((done) => {
-  console.info(
-`Starting mongoUnit...
-Note that the tests need to download mongodb-prebuilt the first time, and that can take a few minutes.
-If you get an error concerning spawning, run 'chmod -R u+x node_modules/mongodb-prebuilt/' and try again.`
-  );
-
   return mongoUnit.start()
     .then(() => {
-      console.log('Fake mongo is started');
       mongoose.connect(mongoUnit.getUrl(), { useNewUrlParser: true, useUnifiedTopology: true });
       mongoUnit.load(testData)
       done();
@@ -52,7 +44,6 @@ If you get an error concerning spawning, run 'chmod -R u+x node_modules/mongodb-
 }, 1200000);
 
 afterAll(() => {
-  console.log('Stopping mongoUnit...')
   mongoose.disconnect();
   return mongoUnit.stop();
 });

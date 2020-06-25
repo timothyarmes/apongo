@@ -1,4 +1,4 @@
-const { SchemaDirectiveVisitor } = require('graphql-tools');
+import { SchemaDirectiveVisitor } from '@graphql-tools/utils';
 const gql = require('graphql-tag');
 
 const apongoTypes = gql`

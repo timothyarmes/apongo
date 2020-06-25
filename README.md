@@ -84,7 +84,7 @@ import { createPipeline } from 'apongo';
 ...
 
 const users = (_, { limit = 20 }, context, resolveInfo) => {
-  // Create a pipeline to first perform any initial matching, then do the lookups and finally the results
+  // Create a pipeline to first perform any initial matching, then do the lookups and finally fetch the results
   const pipeline = [
     // Perform any initial matching that you need.
     // This would typically depend on the parameters passed to the query.
@@ -120,7 +120,7 @@ const users = (_, { limit = 20 }, context, resolveInfo) => {
 
 This function will analyse the query and construct an aggregation pipeline to construct the lookups.
 
-In the example above, the `users` query need to directly returns the result of an aggregation over the `Users` collection.
+In the example above, the `users` query needs to directly returns the result of an aggregation over the `Users` collection.
 If the GraphQL request includes the `company` field then Apongo will fetch data from the `Companies` collection using `$lookup`.
 
 
@@ -152,7 +152,7 @@ By default `createPipeline` assumes that the fields in current GraphQL request m
 ```
 
 Here, the `paginatedUsers` resolver should return two fields, `count` and `users`. `users` needs be the result an aggregation
-on the `Users` collection, sp we need to tell `createPipeline` this by passing the field name to `createPipeline`:
+on the `Users` collection, so we need to tell `createPipeline` this by passing the field name to `createPipeline`:
 
 
 ```
