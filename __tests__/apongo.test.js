@@ -41,7 +41,7 @@ beforeAll((done) => {
       mongoUnit.load(testData)
       done();
     })
-}, 1200000);
+}, 2400000);
 
 afterAll(() => {
   mongoose.disconnect();
