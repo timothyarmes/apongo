@@ -74,10 +74,11 @@ function fillPipeline(fields, pipeline, context, path = '') {
     }
 
     const fieldsByTypeNameKeys = Object.keys(field.fieldsByTypeName);
-    if (fieldsByTypeNameKeys.length === 0) return;
-    if (fieldsByTypeNameKeys.length > 1) throw new ApolloError(`Unable to handle join return type with multiple types (${fieldsByTypeNameKeys.join(', ')})`);
-    const subFields = field.fieldsByTypeName[fieldsByTypeNameKeys[0]];
-    fillPipeline(subFields, pipeline, context, `${path}${alias}.`);
+    if (fieldsByTypeNameKeys.length > 0) {
+      if (fieldsByTypeNameKeys.length > 1) throw new ApolloError(`Unable to handle join return type with multiple types (${fieldsByTypeNameKeys.join(', ')})`);
+      const subFields = field.fieldsByTypeName[fieldsByTypeNameKeys[0]];
+      fillPipeline(subFields, pipeline, context, `${path}${alias}.`);
+    }
 
     // If the parent didn't exist at all before compose or expr was called then we'll end up with an empty object.
     // If that's the case then we remove it.
