@@ -1,4 +1,3 @@
-import { createTestClient } from 'apollo-server-testing';
 import { mergeTypes } from 'merge-graphql-schemas';
 import { ApolloServer } from 'apollo-server';
 import gql from 'graphql-tag';
@@ -87,6 +86,5 @@ export const apolloServer = () => {
     schemaDirectives: { ...apongoDirectives }
   });
 
-  const { query } = createTestClient(server);
-  return query;
+  return server;
 };
