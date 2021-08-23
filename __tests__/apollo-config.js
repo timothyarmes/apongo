@@ -1,10 +1,13 @@
 import { mergeTypes } from 'merge-graphql-schemas';
+import { makeExecutableSchema } from '@graphql-tools/schema';
 import { ApolloServer } from 'apollo-server';
 import gql from 'graphql-tag';
 import mongoose from 'mongoose';
 
-import { apongoTypes, apongoDirectives } from '../src/types';
+import { apongoDirective } from '../src/types';
 import createPipeline from '../src/create-pipeline';
+
+const { apongoDirectiveTypeDefs, apongoDirectiveTransformer } = apongoDirective('apongo');
 
 const userSchema = new mongoose.Schema({
   name: String,
@@ -79,11 +82,14 @@ const resolvers = {
   }
 }
 
+export const schema = apongoDirectiveTransformer(makeExecutableSchema({
+  resolvers,
+  typeDefs: mergeTypes([apongoDirectiveTypeDefs, types]),
+}));
+
 export const apolloServer = () => {
   const server = new ApolloServer({
-    resolvers,
-    typeDefs: mergeTypes([apongoTypes, types]),
-    schemaDirectives: { ...apongoDirectives }
+    schema
   });
 
   return server;

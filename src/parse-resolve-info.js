@@ -94,11 +94,10 @@ function fieldTreeFromAST(inASTs, resolveInfo, initTree = {}, options = {}, pare
           if (!fieldGqlTypeOrUndefined) {
             return tree;
           }
-
           const fieldGqlType = fieldGqlTypeOrUndefined;
           const args = getArgumentValues(field, val, variableValues) || {};
           if (parentType.name && !tree[parentType.name][alias]) {
-            const apongo = { ...(field.apongo || {}) };
+            const apongo = { ...(field.astNode.apongo || {}) };
             const newTreeRoot = {
               name,
               alias,

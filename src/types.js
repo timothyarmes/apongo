@@ -1,4 +1,4 @@
-import { SchemaDirectiveVisitor } from '@graphql-tools/utils';
+import { mapSchema, getDirective, MapperKind } from '@graphql-tools/utils';
 const gql = require('graphql-tag');
 
 const apongoTypes = gql`
@@ -15,17 +15,35 @@ const apongoTypes = gql`
   directive @apongo(lookup: ApongoLookup, compose: [String!], expr: String) on FIELD_DEFINITION
 `;
 
-class apongoDirective extends SchemaDirectiveVisitor {
-  visitFieldDefinition(field) {
-    return {
-      ...field,
-      apongo: this.args,
-    };
+function apongoDirective(directiveName = 'apongo') {
+  return {
+    apongoDirectiveTypeDefs: `
+      input ApongoLookup {
+        collection: String!
+        localField: String!
+        foreignField: String!
+        preserveNull: Boolean
+        conds: String
+        sort: String
+        limit: Int
+      }
+    
+      directive @${directiveName}(lookup: ApongoLookup, compose: [String!], expr: String) on FIELD_DEFINITION
+    `,
+
+    apongoDirectiveTransformer: (schema) => mapSchema(schema, {
+      [MapperKind.OBJECT_FIELD]: (fieldConfig, _fieldName, typeName) => {
+        const apongoDirective = getDirective(schema, fieldConfig, 'apongo')?.[0];
+        if (apongoDirective) {
+          fieldConfig.astNode.apongo = apongoDirective;
+        }
+        return fieldConfig;
+      }
+    })
   }
 }
 
 module.exports = {
-  apongoTypes,
-  apongoDirectives : { apongo: apongoDirective },
+  apongoDirective,
 };
 
